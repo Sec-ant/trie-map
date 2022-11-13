@@ -1,5 +1,13 @@
-type TrunkNode<V> = TrieMap<symbol, V>;
-type TreeNode<K, V> = TrieMap<K | symbol, TreeNode<K, V> | V>;
+type TrunkNode<V, D extends boolean> = D extends true
+  ? TrieMap<symbol, V>
+  : Map<symbol, V>;
+type TreeNode<K, V, D extends boolean> = D extends true
+  ? TrieMap<K | symbol, TreeNode<K, V, D> | V>
+  : Map<K | symbol, TreeNode<K, V, D> | V>;
+
+interface MapOptions {
+  deep: boolean; // default is true
+}
 
 const dataSymbol = Symbol("data");
 const protectedSetSymbol = Symbol("protected-set");
@@ -9,33 +17,52 @@ export class IterableKeyedMap<IterableElement, Value>
   implements Map<Iterable<IterableElement>, Value>
 {
   #size = 0;
-  #root: TreeNode<IterableElement, Value>;
+  #shallowRoot: TreeNode<IterableElement, Value, false> | undefined;
+  #deepRoot: TreeNode<IterableElement, Value, true> | undefined;
   #map = new Map<
-    TreeNode<IterableElement, Value>,
+    TreeNode<IterableElement, Value, boolean>,
     [Iterable<IterableElement>, Value]
   >();
+  #deep: boolean;
   constructor(
     initialEntries: Iterable<
       [key: Iterable<IterableElement>, value: Value]
-    > = []
+    > = [],
+    { deep = true }: MapOptions = {
+      deep: true,
+    }
   ) {
-    this.#root = new TrieMap();
+    this.#deep = deep;
+    if (deep) {
+      this.#deepRoot = new TrieMap();
+    } else {
+      this.#shallowRoot = new Map();
+    }
     for (const [key, value] of initialEntries) {
       this.set(key, value);
     }
   }
+  get #root() {
+    return this.#deepRoot ?? this.#shallowRoot;
+  }
   [protectedSetSymbol](
     key: Iterable<IterableElement>,
     value: Value
-  ): TreeNode<IterableElement, Value> {
-    let map = this.#root;
+  ): TreeNode<IterableElement, Value, boolean> {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    let map = this.#root!;
     for (const item of key) {
       let nextMap = map.get(item);
       if (!nextMap) {
-        nextMap = new TrieMap();
-        map.set(item, nextMap);
+        if (this.#deep) {
+          nextMap = new TrieMap();
+          map.set(item, nextMap);
+        } else {
+          nextMap = new Map();
+          map.set(item, nextMap);
+        }
       }
-      map = nextMap as TreeNode<IterableElement, Value>;
+      map = nextMap as TreeNode<IterableElement, Value, boolean>;
     }
     if (!map.has(dataSymbol)) {
       ++this.#size;
@@ -49,11 +76,12 @@ export class IterableKeyedMap<IterableElement, Value>
     return this;
   }
   has(key: Iterable<IterableElement>): boolean {
-    let map = this.#root;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    let map = this.#root!;
     for (const item of key) {
       const nextMap = map.get(item);
       if (nextMap) {
-        map = nextMap as TreeNode<IterableElement, Value>;
+        map = nextMap as TreeNode<IterableElement, Value, boolean>;
       } else {
         return false;
       }
@@ -61,27 +89,33 @@ export class IterableKeyedMap<IterableElement, Value>
     return map.has(dataSymbol);
   }
   get(key: Iterable<IterableElement>): Value | undefined {
-    let map = this.#root;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    let map = this.#root!;
     for (const item of key) {
       const nextMap = map.get(item);
       if (!nextMap) {
         return undefined;
       }
-      map = nextMap as TreeNode<IterableElement, Value>;
+      map = nextMap as TreeNode<IterableElement, Value, boolean>;
     }
-    return (map as TrunkNode<Value>).get(dataSymbol);
+    return (map as TrunkNode<Value, boolean>).get(dataSymbol);
   }
   [protectedDeleteSymbol](
     key: Iterable<IterableElement>
-  ): TreeNode<IterableElement, Value> | undefined {
-    let map = this.#root;
+  ): TreeNode<IterableElement, Value, boolean> | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    let map = this.#root!;
     const stack: {
-      parent: TreeNode<IterableElement, Value>;
-      child: TreeNode<IterableElement, Value>;
+      parent: TreeNode<IterableElement, Value, boolean>;
+      child: TreeNode<IterableElement, Value, boolean>;
       item: IterableElement;
     }[] = [];
     for (const item of key) {
-      const nextMap = map.get(item) as TreeNode<IterableElement, Value>;
+      const nextMap = map.get(item) as TreeNode<
+        IterableElement,
+        Value,
+        boolean
+      >;
       if (nextMap) {
         stack.unshift({ parent: map, child: nextMap, item });
         map = nextMap;
@@ -106,12 +140,12 @@ export class IterableKeyedMap<IterableElement, Value>
     const map = this[protectedDeleteSymbol](key);
     if (map) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
   clear(): void {
-    this.#root.clear();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    this.#root!.clear();
     this.#map.clear();
     this.#size = 0;
   }
@@ -156,8 +190,13 @@ export class IterableKeyedMap<IterableElement, Value>
 export class TrieMap<Key, Value> implements Map<Key, Value> {
   #vanillaMap = new Map<Key, Value>();
   #iterableKeyedMap: IterableKeyedMap<unknown, Value> | undefined;
-  #map = new Map<TreeNode<unknown, Value> | Key, [Key, Value]>();
-  constructor(initialEntries: Iterable<[key: Key, value: Value]> = []) {
+  #map = new Map<TreeNode<unknown, Value, boolean> | Key, [Key, Value]>();
+  #deep: boolean;
+  constructor(
+    initialEntries: Iterable<[key: Key, value: Value]> = [],
+    { deep = true }: MapOptions = { deep: true }
+  ) {
+    this.#deep = deep;
     for (const [key, value] of initialEntries) {
       this.set(key, value);
     }
@@ -165,7 +204,13 @@ export class TrieMap<Key, Value> implements Map<Key, Value> {
   set(key: Key, value: Value): this {
     if (isReferenceIterable(key)) {
       if (!this.#iterableKeyedMap) {
-        this.#iterableKeyedMap = new IterableKeyedMap();
+        if (this.#deep) {
+          this.#iterableKeyedMap = new IterableKeyedMap();
+        } else {
+          this.#iterableKeyedMap = new IterableKeyedMap(undefined, {
+            deep: false,
+          });
+        }
       }
       const map = this.#iterableKeyedMap[protectedSetSymbol](key, value);
       this.#map.set(map, [key, value]);
@@ -178,39 +223,35 @@ export class TrieMap<Key, Value> implements Map<Key, Value> {
   has(key: Key): boolean {
     if (isReferenceIterable(key)) {
       if (!this.#iterableKeyedMap) {
-        this.#iterableKeyedMap = new IterableKeyedMap();
+        return false;
       }
       return this.#iterableKeyedMap.has(key);
-    } else {
-      return this.#vanillaMap.has(key);
     }
+    return this.#vanillaMap.has(key);
   }
   get(key: Key): Value | undefined {
     if (isReferenceIterable(key)) {
       if (!this.#iterableKeyedMap) {
-        this.#iterableKeyedMap = new IterableKeyedMap();
+        return undefined;
       }
       return this.#iterableKeyedMap.get(key);
-    } else {
-      return this.#vanillaMap.get(key);
     }
+    return this.#vanillaMap.get(key);
   }
   delete(key: Key): boolean {
     if (isReferenceIterable(key)) {
       if (!this.#iterableKeyedMap) {
-        this.#iterableKeyedMap = new IterableKeyedMap();
+        return false;
       }
       const map = this.#iterableKeyedMap[protectedDeleteSymbol](key);
       if (map) {
         this.#map.delete(map);
         return true;
-      } else {
-        return false;
       }
-    } else {
-      this.#map.delete(key);
-      return this.#vanillaMap.delete(key);
+      return false;
     }
+    this.#map.delete(key);
+    return this.#vanillaMap.delete(key);
   }
   clear(): void {
     if (this.#iterableKeyedMap) {
