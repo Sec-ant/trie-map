@@ -1,5 +1,5 @@
 {
-  "name": "trie-map",
+  "name": "@sec-ant/trie-map",
   "version": "1.0.0",
   "description": "TS/JS Map-like data structure backed by trie",
   "type": "module",

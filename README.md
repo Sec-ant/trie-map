@@ -3,7 +3,7 @@
 This package is greatly inspired by [anko/array-keyed-map](https://github.com/anko/array-keyed-map).
 
 ```ts
-import { TrieMap } from "./index.js";
+import { TrieMap } from "@sec-ant/trie-map";
 
 const tmap = new TrieMap<string | any[], number | string>([
   [[0, [0, [0, [0, "0"], "0"], "0"], "0"], "hello world"],
