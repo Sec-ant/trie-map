@@ -9,9 +9,9 @@ interface MapOptions {
   deep: boolean; // default is true
 }
 
-const dataSymbol = Symbol("data");
-const protectedSetSymbol = Symbol("protected-set");
-const protectedDeleteSymbol = Symbol("protected-delete");
+const dataSymbol = Symbol();
+const protectedSetSymbol = Symbol();
+const protectedDeleteSymbol = Symbol();
 
 export class IterableKeyedMap<IterableElement, Value>
   implements Map<Iterable<IterableElement>, Value>
