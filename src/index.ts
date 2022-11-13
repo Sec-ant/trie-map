@@ -8,7 +8,7 @@ export class TrieMap<Key, Value> implements Map<Key, Value> {
   #root: Map<unknown, unknown> | TrieMap<unknown, unknown> | undefined;
   #map = new Map<
     TrieMap<unknown, unknown> | Map<unknown, unknown> | Key,
-    [Key, Value]
+    [Key, Value] | Value
   >();
   #deep: boolean;
   constructor(
@@ -23,30 +23,21 @@ export class TrieMap<Key, Value> implements Map<Key, Value> {
   set(key: Key, value: Value): this {
     if (isReferenceIterable(key)) {
       if (!this.#root) {
-        if (this.#deep) {
-          this.#root = new TrieMap();
-        } else {
-          this.#root = new Map();
-        }
+        this.#root = this.#deep ? new TrieMap() : new Map();
       }
       let map = this.#root;
       for (const item of key) {
         let nextMap = map.get(item) as typeof map | undefined;
         if (!nextMap) {
-          if (this.#deep) {
-            nextMap = new TrieMap();
-            map.set(item, nextMap);
-          } else {
-            nextMap = new Map();
-            map.set(item, nextMap);
-          }
+          nextMap = this.#deep ? new TrieMap() : new Map();
+          map.set(item, nextMap);
         }
         map = nextMap;
       }
       map.set(dataSymbol, value);
       this.#map.set(map, [key, value]);
     } else {
-      this.#map.set(key, [key, value]);
+      this.#map.set(key, value);
     }
     return this;
   }
@@ -58,11 +49,10 @@ export class TrieMap<Key, Value> implements Map<Key, Value> {
       let map = this.#root;
       for (const item of key) {
         const nextMap = map.get(item) as typeof map | undefined;
-        if (nextMap) {
-          map = nextMap;
-        } else {
+        if (!nextMap) {
           return false;
         }
+        map = nextMap;
       }
       return map.has(key);
     }
@@ -83,7 +73,7 @@ export class TrieMap<Key, Value> implements Map<Key, Value> {
       }
       return map.get(dataSymbol) as Value | undefined;
     }
-    return this.#map.get(key)?.[1];
+    return this.#map.get(key) as Value | undefined;
   }
   delete(key: Key): boolean {
     if (isReferenceIterable(key)) {
@@ -98,12 +88,11 @@ export class TrieMap<Key, Value> implements Map<Key, Value> {
       }[] = [];
       for (const item of key) {
         const nextMap = map.get(item) as typeof map | undefined;
-        if (nextMap) {
-          stack.unshift({ parent: map, child: nextMap, item });
-          map = nextMap;
-        } else {
+        if (!nextMap) {
           return false;
         }
+        stack.unshift({ parent: map, child: nextMap, item });
+        map = nextMap;
       }
       const hadPreviousValue = map.delete(dataSymbol);
       if (hadPreviousValue) {
@@ -127,8 +116,10 @@ export class TrieMap<Key, Value> implements Map<Key, Value> {
   get size(): number {
     return this.#map.size;
   }
-  entries(): IterableIterator<[Key, Value]> {
-    return this.#map.values();
+  *entries(): IterableIterator<[Key, Value]> {
+    for (const [key, value] of this.#map.entries()) {
+      yield (Array.isArray(value) ? value : [key, value]) as [Key, Value];
+    }
   }
   *keys(): IterableIterator<Key> {
     for (const [key] of this.entries()) {
