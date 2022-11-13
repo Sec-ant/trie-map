@@ -40,4 +40,4 @@ console.log(...tmap);
 
 - [ ] Type issues.
 - [ ] Unit tests.
-- [x] Code minification. (use [esm.run](https://cdn.jsdelivr.net/npm/trie-map/+esm))
+- [x] Code minification. (use [esm.run](https://cdn.jsdelivr.net/npm/@sec-ant/trie-map/+esm))
