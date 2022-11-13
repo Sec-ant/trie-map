@@ -213,16 +213,15 @@ export class TrieMap<Key, Value> implements Map<Key, Value> {
     }
   }
   clear(): void {
-    if (!this.#iterableKeyedMap) {
-      this.#iterableKeyedMap = new IterableKeyedMap();
+    if (this.#iterableKeyedMap) {
+      this.#iterableKeyedMap.clear();
     }
-    this.#iterableKeyedMap.clear();
     this.#vanillaMap.clear();
     this.#map.clear();
   }
   get size(): number {
     if (!this.#iterableKeyedMap) {
-      this.#iterableKeyedMap = new IterableKeyedMap();
+      return this.#vanillaMap.size;
     }
     return this.#iterableKeyedMap.size + this.#vanillaMap.size;
   }
