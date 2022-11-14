@@ -1,5 +1,5 @@
-export interface MapOptions {
-  deep: boolean; // default is true
+export interface TrieMapOptions {
+  deep?: boolean; // default is true
 }
 
 const dataSymbol = Symbol();
@@ -13,7 +13,7 @@ export class TrieMap<Key, Value> implements Map<Key, Value> {
   #deep: boolean;
   constructor(
     initialEntries: Iterable<[Key, Value]> = [],
-    { deep = true }: MapOptions = { deep: true }
+    { deep = true }: TrieMapOptions = { deep: true }
   ) {
     this.#deep = deep;
     for (const [key, value] of initialEntries) {
