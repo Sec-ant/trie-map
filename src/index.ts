@@ -81,26 +81,25 @@ export class TrieMap<Key, Value> implements Map<Key, Value> {
         return false;
       }
       let map = this.#root;
-      const stack: {
-        parent: typeof map;
-        child: typeof map;
-        item: unknown;
-      }[] = [];
+      const stack = [map];
       for (const item of key) {
         const nextMap = map.get(item) as typeof map | undefined;
         if (!nextMap) {
           return false;
         }
-        stack.unshift({ parent: map, child: nextMap, item });
         map = nextMap;
+        stack.unshift(map);
       }
       const hadPreviousValue = map.delete(dataSymbol);
       if (hadPreviousValue) {
         this.#map.delete(map);
-        for (const { parent, child, item } of stack) {
-          if (child.size === 0) {
-            parent.delete(item);
+        let child: typeof map | undefined;
+        for (const map of stack) {
+          child && map.delete(child);
+          if (map.size) {
+            break;
           }
+          child = map;
         }
         return true;
       }
