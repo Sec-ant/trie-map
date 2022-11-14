@@ -21,7 +21,7 @@ export class TrieMap<Key, Value> implements Map<Key, Value> {
     }
   }
   set(key: Key, value: Value): this {
-    if (isReferenceIterable(key)) {
+    if (isIterableReference(key)) {
       if (!this.#root) {
         this.#root = this.#deep ? new TrieMap() : new Map();
       }
@@ -42,7 +42,7 @@ export class TrieMap<Key, Value> implements Map<Key, Value> {
     return this;
   }
   has(key: Key): boolean {
-    if (isReferenceIterable(key)) {
+    if (isIterableReference(key)) {
       if (!this.#root) {
         return false;
       }
@@ -59,7 +59,7 @@ export class TrieMap<Key, Value> implements Map<Key, Value> {
     return this.#map.has(key);
   }
   get(key: Key): Value | undefined {
-    if (isReferenceIterable(key)) {
+    if (isIterableReference(key)) {
       if (!this.#root) {
         return undefined;
       }
@@ -76,7 +76,7 @@ export class TrieMap<Key, Value> implements Map<Key, Value> {
     return this.#map.get(key) as Value | undefined;
   }
   delete(key: Key): boolean {
-    if (isReferenceIterable(key)) {
+    if (isIterableReference(key)) {
       if (!this.#root) {
         return false;
       }
@@ -149,7 +149,7 @@ export class TrieMap<Key, Value> implements Map<Key, Value> {
   }
 }
 
-function isReferenceIterable(
+function isIterableReference(
   item: unknown
 ): item is Iterable<unknown> & object {
   return typeof item === "object" && item !== null && Symbol.iterator in item;
