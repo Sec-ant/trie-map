@@ -22,7 +22,7 @@ map.get(b); // => "bar"
 map.get(["hello", "world"]); // => undefined
 ```
 
-However, in some use cases, we don't always preserve the references of the keys (and in some cases we just don't have them, i.e. when the map is imported from a third-party module) and we want arrays with same contents always point to the same value, i.e. in a file system:
+However, in some use cases, we don't always preserve the references of the keys (and in some cases we just don't have them, e.g., when the map is imported from a third-party module) and we want arrays with same contents always point to the same value, e.g., in a file system:
 
 ```js
 const map = new Map();
