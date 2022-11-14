@@ -147,7 +147,7 @@ tmap.clear(); // => undefined, remove all key-value pairs
 
 ### Iterations in Insertion Order
 
-All iterations (`entries()`, `keys()`, `values()`, `forEach` and `Symbol.iterator`) are in insertion order.
+All iterations (`entries`, `keys`, `values`, `forEach` and `Symbol.iterator`) are in insertion order.
 
 ### Supports Mixing of Primitives and Iterable References as Keys
 
