@@ -8,7 +8,7 @@ export class TrieMap<Key, Value> implements Map<Key, Value> {
   #root: Map<unknown, unknown> | TrieMap<unknown, unknown> | undefined;
   #map = new Map<
     TrieMap<unknown, unknown> | Map<unknown, unknown> | Key,
-    [Key, Value] | Value
+    Key | Value
   >();
   #deep: boolean;
   constructor(
@@ -35,7 +35,7 @@ export class TrieMap<Key, Value> implements Map<Key, Value> {
         map = nextMap;
       }
       map.set(dataSymbol, value);
-      this.#map.set(map, [key, value]);
+      this.#map.set(map, key);
     } else {
       this.#map.set(key, value);
     }
@@ -118,7 +118,9 @@ export class TrieMap<Key, Value> implements Map<Key, Value> {
   }
   *entries(): IterableIterator<[Key, Value]> {
     for (const [key, value] of this.#map.entries()) {
-      yield (Array.isArray(value) ? value : [key, value]) as [Key, Value];
+      yield (
+        isIterableReference(key) ? [value, key.get(dataSymbol)] : [key, value]
+      ) as [Key, Value];
     }
   }
   *keys(): IterableIterator<Key> {
