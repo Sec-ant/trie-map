@@ -14,7 +14,7 @@
   "scripts": {
     "clean": "rm -fr ./dist/*.*s",
     "lint": "eslint src",
-    "build": "npm run lint && npm run clean && tsc",
+    "build": "npm run lint && npm run clean && swc ./src -d dist && tsc",
     "serve": "http-server -c-1 dist"
   },
   "repository": {
@@ -36,6 +36,8 @@
   "author": "Ze-Zheng Wu",
   "license": "MIT",
   "devDependencies": {
+    "@swc/cli": "^0.1.57",
+    "@swc/core": "^1.3.16",
     "@typescript-eslint/eslint-plugin": "^5.42.1",
     "@typescript-eslint/parser": "^5.42.1",
     "eslint": "^8.27.0",
