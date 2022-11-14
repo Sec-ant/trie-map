@@ -205,7 +205,7 @@ This package has no dependencies and the js code is only 1.37 kiB after minifica
 
 The runtime should support [ES modules](https://caniuse.com/?search=es%20modules), [Classes](https://caniuse.com/?search=classes), [Generators and `yield`](https://caniuse.com/?search=yield) and [Symbol](https://caniuse.com/?search=symbol). Although you should be able to transpile this package when using other front-end build or bundle tools.
 
-Check the configured browserslist coverage [here](https://browsersl.ist/#q=supports+es6-module+and+last+4+versions%2C+Chrome+%3E%3D74%2C+Edge%3E%3D+79%2C+Safari+%3E%3D+14.1%2C+Firefox+%3E%3D+90%2C+Opera+%3E%3D+62%2C+ChromeAndroid+%3E%3D+107%2C+iOS+%3E%3D+15%2C+Samsung+%3E%3D+11.1%2C+node+%3E%3D+14).
+Check the configured browserslist coverage [here](https://browsersl.ist/#q=supports+es6-module+and+last+4+versions%2C+Chrome+%3E%3D+74%2C+Edge+%3E%3D+79%2C+Safari+%3E%3D+14.1%2C+Firefox+%3E%3D+90%2C+Opera+%3E%3D+62%2C+ChromeAndroid+%3E%3D+107%2C+iOS+%3E%3D+15%2C+Samsung+%3E%3D+11.1%2C+node+%3E%3D+14).
 
 ## Notes
 
