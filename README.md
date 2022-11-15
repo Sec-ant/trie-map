@@ -1,6 +1,6 @@
 # @sec-ant/trie-map
 
-![GitHub top language](https://img.shields.io/github/languages/top/Sec-ant/trie-map) [![npm version](https://img.shields.io/npm/v/@sec-ant/trie-map)](https://www.npmjs.com/package/@sec-ant/trie-map) [![npm downloads](https://img.shields.io/npm/dm/@sec-ant/trie-map)](https://www.npmjs.com/package/@sec-ant/trie-map) [![](https://data.jsdelivr.com/v1/package/npm/@sec-ant/trie-map/badge?style=rounded)](https://www.jsdelivr.com/package/npm/@sec-ant/trie-map) ![GitHub search hit counter](https://img.shields.io/github/search/Sec-ant/trie-map/goto)
+![GitHub top language](https://img.shields.io/github/languages/top/Sec-ant/trie-map) [![npm version](https://img.shields.io/npm/v/@sec-ant/trie-map)](https://www.npmjs.com/package/@sec-ant/trie-map) [![npm downloads](https://img.shields.io/npm/dm/@sec-ant/trie-map)](https://www.npmjs.com/package/@sec-ant/trie-map) [![](https://data.jsdelivr.com/v1/package/npm/@sec-ant/trie-map/badge?style=rounded)](https://www.jsdelivr.com/package/npm/@sec-ant/trie-map) ![GitHub search hit counter](https://img.shields.io/github/search/Sec-ant/trie-map/goto) [![Rate this package](https://badges.openbase.com/js/rating/@sec-ant/trie-map.svg?token=SBYugeYmOxDXIoCFLx5bHr1urYSXTjmWD51wO5PzyH0=)](https://openbase.com/js/@sec-ant/trie-map?utm_source=embedded&amp;utm_medium=badge&amp;utm_campaign=rate-badge)
 
 This package impelements a Map-like data structure backed by [trie](https://en.wikipedia.org/wiki/Trie).
 
