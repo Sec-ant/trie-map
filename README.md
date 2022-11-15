@@ -25,11 +25,11 @@ map.get(["hello", "world"]); // => undefined
 However, in some use cases, we don't always preserve the references of the keys (and in some cases we just don't have them, e.g., when the map is imported from a third-party module) and we want arrays with same contents always point to the same value, e.g., in a file system:
 
 ```js
-const map = new Map();
+const fs = new Map();
 
-map.set(["c", "program files"], "hello world.txt");
+fs.set(["c", "program files"], "hello world.txt");
 
-map.get(["c", "program files"]); // => undefined, oops!
+fs.get(["c", "program files"]); // => undefined, oops!
 ```
 
 This package treats iterable-reference-type (array or array-like object that implements the [iterable protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#the_iterable_protocol)) keys as values and uses value-equality to check key equality. The underlying structure is a [trie](https://en.wikipedia.org/wiki/Trie).
@@ -176,7 +176,9 @@ tmap.set([[], []], "baz").get([[], []]); // => "baz"
 tmap.set([["1"], [], "2", ["3"]], "123").get([["1"], [], "2", ["3"]]); // => "123"
 ```
 
-### Provides an Option to Opt Out From Value Comparison of Deeply Nested Iterables, i.e., Shallow Comparison of Keys
+### Shallow Comparison of Keys
+
+This package also provides an option to opt out from value comparison of deeply nested iterables:
 
 ```ts
 import { TrieMap, TrieMapOptions } from "@sec-ant/trie";
