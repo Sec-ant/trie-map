@@ -14,7 +14,7 @@
   },
   "env": {
     "targets": [
-      "supports es6-module and last 4 versions",
+      "supports es6-module and last 4 versions and not dead",
       "Chrome >= 74",
       "Edge >= 79",
       "Safari >= 14.1",
