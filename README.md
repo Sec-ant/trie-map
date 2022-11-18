@@ -49,7 +49,7 @@ yarn add @sec-ant/trie-map
 ## Basic Usage
 
 ```js
-import { TrieMap } from "@sec-ant/trie";
+import { TrieMap } from "@sec-ant/trie-map";
 
 const a = ["hello", "world"];
 const b = ["hello", "world"];
@@ -74,7 +74,7 @@ However, the following features make this package stand out:
 This packages is fully written in Typescript
 
 ```ts
-import { TrieMap } from "@sec-ant/trie";
+import { TrieMap } from "@sec-ant/trie-map";
 
 const tmap = new TrieMap<string[], string>();
 
@@ -94,7 +94,7 @@ const value = tmap.get(["hello", "world"]); // => "foo"
   <summary>Mimic all methods and properties in <href src="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Map#instance_properties">Map</href></summary>
 
 ```ts
-import { TrieMap } from "@sec-ant/trie";
+import { TrieMap } from "@sec-ant/trie-map";
 
 // construct, use [key, value] entries to init a TrieMap instance
 const tmap = new TrieMap<string[], string>([
@@ -152,7 +152,7 @@ All iterations (`entries`, `keys`, `values`, `forEach` and `Symbol.iterator`) ar
 ### Supports Mixing of Primitives and Iterable References as Keys
 
 ```ts
-import { TrieMap } from "@sec-ant/trie";
+import { TrieMap } from "@sec-ant/trie-map";
 
 const tmap = new TrieMap<string | number | string[], string>();
 
@@ -166,7 +166,7 @@ tmap.set(["string"], "array").get(["string"]); // => "array"
 ### Supports Value Comparison of Deeply Nested Iterables
 
 ```ts
-import { TrieMap } from "@sec-ant/trie";
+import { TrieMap } from "@sec-ant/trie-map";
 
 const tmap = new TrieMap<(string | string[])[], string>();
 
@@ -181,7 +181,7 @@ tmap.set([["1"], [], "2", ["3"]], "123").get([["1"], [], "2", ["3"]]); // => "12
 This package also provides an option to opt out from value comparison of deeply nested iterables:
 
 ```ts
-import { TrieMap, TrieMapOptions } from "@sec-ant/trie";
+import { TrieMap, TrieMapOptions } from "@sec-ant/trie-map";
 
 const options: TrieMapOptions = { deep: false }; // the default value of deep is true
 
@@ -214,7 +214,7 @@ Check the configured browserslist coverage [here](https://browsersl.ist/#q=suppo
 Any two iterable reference type keys are considered equal, value-comparison-wise, as long as their iteration results are same:
 
 ```ts
-import { TrieMap } from "@sec-ant/trie";
+import { TrieMap } from "@sec-ant/trie-map";
 
 const tmap = new TrieMap<number[] | Uint8Array, string>();
 
