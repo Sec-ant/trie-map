@@ -149,7 +149,7 @@ tmap.clear(); // => undefined, remove all key-value pairs
 
 All iterations (`entries`, `keys`, `values`, `forEach` and `Symbol.iterator`) are in insertion order.
 
-### Supports Mixing of Primitives and Iterable References as Keys
+### Mixing of Primitives and Iterable References as Keys
 
 ```ts
 import { TrieMap } from "@sec-ant/trie-map";
@@ -163,7 +163,7 @@ tmap.set(["string"], "array").get(["string"]); // => "array"
 [...tmap]; // => [["key", "string"], [2, "number"], [["string"], "array"]]
 ```
 
-### Supports Value Comparison of Deeply Nested Iterables
+### Value Comparison of Deeply Nested Iterable Keys
 
 ```ts
 import { TrieMap } from "@sec-ant/trie-map";
@@ -178,7 +178,7 @@ tmap.set([["1"], [], "2", ["3"]], "123").get([["1"], [], "2", ["3"]]); // => "12
 
 ### Shallow Comparison of Keys
 
-This package also provides an option to opt out from value comparison of deeply nested iterables:
+This package also provides an option to opt out from value comparison of **deeply** nested iterable keys, and only compares the keys **shallowly**:
 
 ```ts
 import { TrieMap, TrieMapOptions } from "@sec-ant/trie-map";
@@ -195,7 +195,7 @@ tmap.set(["1", two, "3"], "baz").get(["1", two, "3"]); // => "baz"
 tmap.get(["1", ["2"], "3"]); // => undefined
 ```
 
-### Uses Class Private Fields and Unique Symbols for Encapsulation
+### Class Private Fields and Unique Symbols for Encapsulation
 
 See [`#private`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Classes/Private_class_fields) and [`Symbol()`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Symbol)
 
