@@ -1,5 +1,6 @@
 export interface TrieMapOptions {
   deep?: boolean; // default is true
+  ordered?: boolean; // default is true
 }
 
 const dataSymbol = Symbol();
@@ -11,11 +12,17 @@ export class TrieMap<Key, Value> implements Map<Key, Value> {
     Key | Value
   >();
   #deep: boolean;
+  #ordered: boolean;
+  #size = 0;
   constructor(
     initialEntries: Iterable<[Key, Value]> = [],
-    { deep = true }: TrieMapOptions = { deep: true }
+    { deep = true, ordered = true }: TrieMapOptions = {
+      deep: true,
+      ordered: true,
+    }
   ) {
     this.#deep = deep;
+    this.#ordered = ordered;
     for (const [key, value] of initialEntries) {
       this.set(key, value);
     }
@@ -35,7 +42,7 @@ export class TrieMap<Key, Value> implements Map<Key, Value> {
         map = nextMap;
       }
       map.set(dataSymbol, value);
-      this.#map.set(map, key);
+      this.#ordered ? this.#map.set(map, key) : ++this.#size;
     } else {
       this.#map.set(key, value);
     }
@@ -92,7 +99,7 @@ export class TrieMap<Key, Value> implements Map<Key, Value> {
       }
       const hadPreviousValue = map.delete(dataSymbol);
       if (hadPreviousValue) {
-        this.#map.delete(map);
+        this.#ordered ? this.#map.delete(map) : --this.#size;
         let child: typeof map | undefined;
         for (const map of stack) {
           child && map.delete(child);
@@ -111,6 +118,7 @@ export class TrieMap<Key, Value> implements Map<Key, Value> {
       this.#root.clear();
     }
     this.#map.clear();
+    this.#size = 0;
   }
   get size(): number {
     return this.#map.size;

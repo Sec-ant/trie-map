@@ -3,6 +3,8 @@
   "version": "1.1.4",
   "description": "TS/JS Map-like data structure backed by trie",
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
     "./dist/*.ts",
     "./dist/*.js"
@@ -37,10 +39,10 @@
   "license": "MIT",
   "devDependencies": {
     "@swc/cli": "^0.1.57",
-    "@swc/core": "^1.3.16",
-    "@typescript-eslint/eslint-plugin": "^5.42.1",
-    "@typescript-eslint/parser": "^5.42.1",
-    "eslint": "^8.27.0",
-    "typescript": "^4.8.4"
+    "@swc/core": "^1.3.19",
+    "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "@typescript-eslint/parser": "^5.43.0",
+    "eslint": "^8.28.0",
+    "typescript": "^4.9.3"
   }
 }
