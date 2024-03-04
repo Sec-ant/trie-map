@@ -38,7 +38,7 @@
   "author": "Ze-Zheng Wu",
   "license": "MIT",
   "devDependencies": {
-    "@swc/cli": "^0.1.57",
+    "@swc/cli": "^0.3.10",
     "@swc/core": "^1.3.29",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.2.0",
